@@ -156,7 +156,7 @@ describe Article do
     @articles = Article.find_published
     assert_results_are(:search_target, :article1, :article2,
                        :article3, :inactive_article,:xmltest,
-                       :spammed_article, :publisher_article, :markdown_article)
+                       :spammed_article, :publisher_article, :markdown_article, :utf8_article)
 
     @articles = Article.find_published(:all,
                                                   :conditions => "title = 'Article 1!'")
@@ -334,7 +334,7 @@ describe Article do
       it_should_behave_like 'is an array'
 
       it 'should have one item' do
-        assert_equal 8, @articles.size
+        assert_equal 9, @articles.size
       end
     end
   end
@@ -372,6 +372,18 @@ describe Article do
       @article.attributes = { :body_and_extended => 'foo<!--more-->bar' }
       @article.body.should == 'foo'
       @article.extended.should == 'bar'
+    end
+  end
+
+  describe '#comment_url' do
+    it 'should render complete url of comment' do
+      contents(:article1).comment_url.should == "http://myblog.net/comments?article_id=#{contents(:article1).id}"
+    end
+  end
+
+  describe '#preview_comment_url' do
+    it 'should render complete url of comment' do
+      contents(:article1).preview_comment_url.should == "http://myblog.net/comments/preview?article_id=#{contents(:article1).id}"
     end
   end
 
